@@ -93,16 +93,6 @@ void RegAllocBase::allocatePhysRegs() {
         LIS->removeInterval(VirtReg->reg);
     }
 
-
-
-
-
-
-
-
-
-
-
     // Invalidate all interference queries, live ranges could have changed.
     Matrix->invalidateVirtRegs();
 
@@ -119,33 +109,23 @@ void RegAllocBase::allocatePhysRegs() {
 
     // MISSING: Find a physical register to assign to VirtReg, using 
     //          functions from RegAllocGreedy.
+    unsigned assigned_phy_reg = selectOrSplit(*VirtReg, SplitVRegs);
     
-
-
-
-
-
 
     // MISSING: If no physical register can be assigned to the virtual
     //          register, print an error message and return.
-
-
-
-
-
-
-
-
+    if (assigned_phy_reg == ~0u){
+        DEBUG (dbgs()<< "No available physical register for current virtual register\n");
+    }
 
 
     // MISSING: If a physical register can be assigned, then 
     //            assign it to the virtual register, updating 
     //          Matrix from RegAllocBase.h
 
-
-
-
-
+    if (assigned_phy_reg != 0){//0 means this vreg is spilled, not allocation for it
+        Matrix->assign (*VirtReg, assigned_phy_reg);
+    }
 
 
     for (VirtRegVec::iterator I = SplitVRegs.begin(), E = SplitVRegs.end();
