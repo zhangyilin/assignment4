@@ -89,6 +89,9 @@ void RegAllocBase::allocatePhysRegs() {
 
     // MISSING : If the register is unused, eliminate it from the 
     //             Live Intervals of the class.
+    if (MRI->reg_nodbg_empty(VirtReg->reg)){//reg_empty - Return true if only debug use
+        LIS->removeInterval(VirtReg->reg);
+    }
 
 
 
